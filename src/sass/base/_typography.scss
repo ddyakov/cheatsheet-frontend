@@ -1,0 +1,36 @@
+@use '../abstracts' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;1,500&family=Sora:wght@600&display=swap');
+
+// Headings h1-h6
+$heading: get-heading-typography();
+
+@for $index from 1 through 6 {
+  h#{$index} {
+    @each $key in map-keys($heading) {
+      $inner-index: 1;
+
+      @if length(map-get($heading, $key)) > 1 {
+        $inner-index: $index;
+      }
+
+      #{$key}: get-prop($heading, $key, $inner-index);
+    }
+  }
+}
+
+%common-other-typography-styles {
+  font-family: $secondary-font-family;
+}
+
+// Paragraphs and other text
+@each $key in map-keys(get-other-typography()) {
+  $map: map-get(get-other-typography(), $key);
+
+  #{$key} {
+    @each $key in map-keys($map) {
+      @extend %common-other-typography-styles;
+      #{$key}: get-prop($map, $key);
+    }
+  }
+}
