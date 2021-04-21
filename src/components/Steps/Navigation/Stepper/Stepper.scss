@@ -1,0 +1,7 @@
+.MuiStepLabel {
+  &-active#{&}-label,
+  &-completed#{&}-label {
+    color: #fff;
+    font-weight: 400;
+  }
+}
