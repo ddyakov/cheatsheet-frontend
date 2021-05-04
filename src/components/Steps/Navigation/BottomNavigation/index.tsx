@@ -25,10 +25,11 @@ const StepsBottomNavigation: FC = () => {
   const classes = useStyles()
   const [showNextButton, setShowNextButton] = useState(true)
   const [showPrevious, setShowPrevious] = useState(false)
-  const { active, totalSteps, getStepData, setState } = useStepsStore(
+  const { active, totalSteps, canGoToNextStep, getStepData, setState } = useStepsStore(
     state => ({
       active: state.active,
       totalSteps: state.totalSteps,
+      canGoToNextStep: state.canGoToNextStep,
       getStepData: state.getStepData,
       setState: state.setState
     }),
@@ -79,6 +80,7 @@ const StepsBottomNavigation: FC = () => {
             endIcon={<ChevronRightIcon />}
             className={classes.nextStepButton}
             disableElevation
+            disabled={!canGoToNextStep}
             onClick={handleOnNextClick}>
             Next
           </Button>

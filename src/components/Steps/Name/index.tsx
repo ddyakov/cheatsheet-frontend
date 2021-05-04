@@ -10,9 +10,14 @@ const Name: FC = () => {
   const [subjectName, setSubjectName] = useState(subject)
 
   useEffect(() => {
+    const newSubject = subjectName.trim()
+
     setState(state => {
-      state.subject = subjectName.trim()
+      state.subject = newSubject
+      state.canGoToNextStep = newSubject.length > 0
     })
+
+    return () => setState(state => (state.canGoToNextStep = false))
   }, [subjectName, setState])
 
   return (

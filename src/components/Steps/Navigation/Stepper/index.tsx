@@ -20,10 +20,18 @@ const useStyles = makeStyles({
 
 const Stepper: FC = () => {
   const classes = useStyles()
-  const { active, activeToComplete, isCompleted, getStepData, setState } = useStepsStore(state => ({
+  const {
+    active,
+    activeToComplete,
+    isCompleted,
+    allRequiredStepsCompleted,
+    getStepData,
+    setState
+  } = useStepsStore(state => ({
     active: state.active,
     activeToComplete: state.activeToComplete,
     isCompleted: state.isCompleted,
+    allRequiredStepsCompleted: state.allRequiredStepsCompleted,
     getStepData: state.getStepData,
     setState: state.setState
   }))
@@ -41,7 +49,7 @@ const Stepper: FC = () => {
         <Step
           active={isActive}
           key={index}
-          disabled={!isCompleted(index) && !isActive}
+          disabled={!isCompleted(index) && !isActive && !allRequiredStepsCompleted()}
           completed={isCompleted(index)}>
           <StepButton
             disableRipple={true}

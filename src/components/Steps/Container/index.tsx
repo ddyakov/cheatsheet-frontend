@@ -1,6 +1,6 @@
 import { Container as MuiContainer, Grid, Paper } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 import LeftPanel from '../LeftPanel'
 import StepsBottomNavigation from '../Navigation/BottomNavigation'
 
@@ -36,7 +36,8 @@ interface ComponentProps {
 
 const Container: FC<ComponentProps> = ({ children }) => {
   const classes = useStyles()
-  document.body.classList.add(classes.body)
+
+  useEffect(() => document.body.classList.add(classes.body), [classes.body])
 
   return (
     <MuiContainer maxWidth='md' className={classes.container}>
