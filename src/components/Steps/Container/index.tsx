@@ -4,13 +4,6 @@ import { FC, ReactNode } from 'react'
 import LeftPanel from '../LeftPanel'
 import StepsBottomNavigation from '../Navigation/BottomNavigation'
 
-const hello = {
-  test: 'hey',
-  test2: 'het'
-}
-
-console.log({ ...hello })
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     body: {

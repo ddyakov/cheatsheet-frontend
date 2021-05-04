@@ -98,6 +98,11 @@ const theme: Theme = createMuiTheme({
   },
   overrides: {
     MuiTypography: muiTypographyOverrides,
+    MuiInputBase: {
+      input: {
+        color: secondaryMain
+      }
+    },
     MuiOutlinedInput: {
       root: {
         borderRadius: borderRadius / 2

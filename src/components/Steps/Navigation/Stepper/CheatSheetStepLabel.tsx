@@ -1,7 +1,7 @@
 import StepLabel from '@material-ui/core/StepLabel'
 import { withStyles } from '@material-ui/core/styles'
 
-const CustomStepLabel = withStyles(({ palette }) => ({
+const CheatSheetStepLabel = withStyles(({ palette }) => ({
   iconContainer: {
     paddingRight: 16
   },
@@ -10,4 +10,4 @@ const CustomStepLabel = withStyles(({ palette }) => ({
   }
 }))(StepLabel)
 
-export default CustomStepLabel
+export default CheatSheetStepLabel

@@ -4,7 +4,7 @@ import DoneRoundedIcon from '@material-ui/icons/DoneRounded'
 import clsx from 'clsx'
 import { FC } from 'react'
 
-const useCustomStepIconStyles = makeStyles((theme: Theme) =>
+const useCheatSheetStepIconStyles = makeStyles((theme: Theme) =>
   createStyles({
     outerContainer: {
       zIndex: 1,
@@ -35,8 +35,8 @@ const useCustomStepIconStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const CustomStepIcon: FC<StepIconProps> = props => {
-  const classes = useCustomStepIconStyles()
+const CheatSheetStepIcon: FC<StepIconProps> = props => {
+  const classes = useCheatSheetStepIconStyles()
   const { active, completed, icon } = props
 
   const renderStepIconLabel = (): JSX.Element =>
@@ -44,7 +44,7 @@ const CustomStepIcon: FC<StepIconProps> = props => {
 
   return (
     <div className={clsx(classes.outerContainer, { [classes.completed]: completed })}>
-      {active ? (
+      {active && !completed ? (
         <div className={clsx({ [classes.innerContainer]: active })}>{renderStepIconLabel()}</div>
       ) : (
         renderStepIconLabel()
@@ -53,4 +53,4 @@ const CustomStepIcon: FC<StepIconProps> = props => {
   )
 }
 
-export default CustomStepIcon
+export default CheatSheetStepIcon

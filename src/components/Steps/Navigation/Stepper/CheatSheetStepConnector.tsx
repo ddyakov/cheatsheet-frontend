@@ -1,7 +1,7 @@
 import StepConnector from '@material-ui/core/StepConnector'
 import { withStyles } from '@material-ui/core/styles'
 
-const CustomStepConnector = withStyles(({ palette }) => ({
+const CheatSheetStepConnector = withStyles(({ palette }) => ({
   line: {
     borderColor: palette.secondary.dark
   },
@@ -25,4 +25,4 @@ const CustomStepConnector = withStyles(({ palette }) => ({
   }
 }))(StepConnector)
 
-export default CustomStepConnector
+export default CheatSheetStepConnector

@@ -1,10 +1,11 @@
 import { Step, StepButton, Stepper as MuiStepper } from '@material-ui/core'
 import { makeStyles, StylesProvider } from '@material-ui/core/styles'
 import { FC } from 'react'
+import { Link } from 'react-router-dom'
 import useStepsStore from '../../../../stores/StepsStore'
-import CustomStepConnector from './CustomStepConnector'
-import CustomStepIcon from './CustomStepIcon'
-import CustomStepLabel from './CustomStepLabel'
+import CheatSheetStepConnector from './CheatSheetStepConnector'
+import CheatSheetStepIcon from './CheatSheetStepIcon'
+import CheatSheetStepLabel from './CheatSheetStepLabel'
 import './Stepper.scss'
 
 const stepsNames = ['Name', 'List', 'Cross-out', 'Group', 'Editor']
@@ -19,14 +20,37 @@ const useStyles = makeStyles({
 
 const Stepper: FC = () => {
   const classes = useStyles()
-  const activeStep = useStepsStore(state => state.activeStep)
+  const { active, activeToComplete, isCompleted, getStepData, setState } = useStepsStore(state => ({
+    active: state.active,
+    activeToComplete: state.activeToComplete,
+    isCompleted: state.isCompleted,
+    getStepData: state.getStepData,
+    setState: state.setState
+  }))
+
+  const handleOnStepButtonClick = (step: number) =>
+    setState(state => {
+      state.active = step
+    })
 
   const renderSteps = (): JSX.Element[] =>
     stepsNames.map((label, index) => {
+      const isActive = activeToComplete === index
+
       return (
-        <Step key={index}>
-          <StepButton disableRipple={true}>
-            <CustomStepLabel StepIconComponent={CustomStepIcon}>{label}</CustomStepLabel>
+        <Step
+          active={isActive}
+          key={index}
+          disabled={!isCompleted(index) && !isActive}
+          completed={isCompleted(index)}>
+          <StepButton
+            disableRipple={true}
+            onClick={() => handleOnStepButtonClick(index)}
+            component={Link}
+            to={getStepData(index).route}>
+            <CheatSheetStepLabel StepIconComponent={CheatSheetStepIcon}>
+              {label}
+            </CheatSheetStepLabel>
           </StepButton>
         </Step>
       )
@@ -35,9 +59,9 @@ const Stepper: FC = () => {
   return (
     <StylesProvider injectFirst>
       <MuiStepper
-        connector={<CustomStepConnector />}
+        connector={<CheatSheetStepConnector />}
         className={classes.stepper}
-        activeStep={activeStep}
+        activeStep={active}
         orientation='vertical'>
         {renderSteps()}
       </MuiStepper>

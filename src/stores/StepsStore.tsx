@@ -1,5 +1,6 @@
 import produce from 'immer'
-import create, { GetState, SetState, State } from 'zustand'
+import { WritableDraft } from 'immer/dist/internal'
+import create, { State } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 interface StepData {
@@ -8,13 +9,17 @@ interface StepData {
   route: string
 }
 
-interface StepsStore extends State {
-  activeStep: number
+export interface StepsStore extends State {
+  active: number
+  activeToComplete: number
   subject: string
-  stepsCount: number
-  getActiveStepData(): StepData
-  getStepData(step: number): StepData
-  set(fn: any): void
+  totalSteps: number
+  completed: { [step: number]: boolean }
+  isCompleted: (step: number) => boolean
+  complete: (step: number) => void
+  getActiveStepData: () => StepData
+  getStepData: (step: number) => StepData
+  setState: (fn: (draft: WritableDraft<StepsStore>) => void) => void
 }
 
 const baseRoute = '/steps'
@@ -49,13 +54,17 @@ const stepsData: StepData[] = [
 
 const useStepsStore = create<StepsStore>(
   persist<StepsStore>(
-    (set: SetState<StepsStore>, get: GetState<StepsStore>) => ({
-      activeStep: 0,
+    (set, get) => ({
+      active: 0,
+      activeToComplete: 0,
       subject: '',
-      stepsCount: stepsData.length,
-      getActiveStepData: () => stepsData[get().activeStep],
+      totalSteps: stepsData.length,
+      completed: {},
+      isCompleted: step => get().completed[step],
+      complete: step => (get().completed[step] = true),
+      getActiveStepData: () => stepsData[get().active],
       getStepData: step => stepsData[step],
-      set: fn => set(produce(fn))
+      setState: fn => set(produce(fn, draft => draft))
     }),
     {
       name: 'steps-storage'

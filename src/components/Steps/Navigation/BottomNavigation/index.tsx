@@ -25,27 +25,35 @@ const StepsBottomNavigation: FC = () => {
   const classes = useStyles()
   const [showNextButton, setShowNextButton] = useState(true)
   const [showPrevious, setShowPrevious] = useState(false)
-  const { set, activeStep, stepsCount, getStepData } = useStepsStore(
+  const { active, totalSteps, getStepData, setState } = useStepsStore(
     state => ({
-      set: state.set,
-      activeStep: state.activeStep,
-      stepsCount: state.stepsCount,
-      getStepData: state.getStepData
+      active: state.active,
+      totalSteps: state.totalSteps,
+      getStepData: state.getStepData,
+      setState: state.setState
     }),
     shallow
   )
 
   useEffect(() => {
-    console.log(activeStep, stepsCount)
-    setShowNextButton(activeStep + 1 < stepsCount)
-    setShowPrevious(activeStep > 0)
-  }, [activeStep, stepsCount])
+    setShowNextButton(active + 1 < totalSteps)
+    setShowPrevious(active > 0)
+  }, [active, totalSteps])
 
-  const handleOnStepNavigationClick = (step: number) => {
-    set((state: any) => {
-      state.activeStep = step
+  const handleOnPreviousClick = () =>
+    setState(state => {
+      state.active--
     })
-  }
+
+  const handleOnNextClick = () =>
+    setState(state => {
+      if (!state.isCompleted(state.activeToComplete) && state.activeToComplete === state.active) {
+        state.complete(state.activeToComplete)
+        state.activeToComplete++
+      }
+
+      state.active++
+    })
 
   return (
     <Grid container justify={showPrevious ? 'space-between' : 'flex-end'} alignItems='flex-end'>
@@ -53,9 +61,9 @@ const StepsBottomNavigation: FC = () => {
         <Grid item>
           <Link
             component={RouterLink}
-            to={getStepData(activeStep - 1)?.route || ''}
+            to={getStepData(active - 1)?.route || ''}
             className={classes.previousStepLink}
-            onClick={() => handleOnStepNavigationClick(activeStep - 1)}>
+            onClick={handleOnPreviousClick}>
             <Typography variant='h6'>Previous step</Typography>
           </Link>
         </Grid>
@@ -65,13 +73,13 @@ const StepsBottomNavigation: FC = () => {
         <Grid item>
           <Button
             component={RouterLink}
-            to={getStepData(activeStep + 1)?.route || ''}
+            to={getStepData(active + 1)?.route || ''}
             variant='contained'
             color='primary'
             endIcon={<ChevronRightIcon />}
             className={classes.nextStepButton}
             disableElevation
-            onClick={() => handleOnStepNavigationClick(activeStep + 1)}>
+            onClick={handleOnNextClick}>
             Next
           </Button>
         </Grid>
