@@ -1,5 +1,5 @@
 import { Step, StepButton, Stepper as MuiStepper } from '@material-ui/core'
-import { makeStyles, StylesProvider } from '@material-ui/core/styles'
+import { StylesProvider } from '@material-ui/core/styles'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import useStepsStore from '../../../../stores/StepsStore'
@@ -8,18 +8,9 @@ import CheatSheetStepIcon from './CheatSheetStepIcon'
 import CheatSheetStepLabel from './CheatSheetStepLabel'
 import './Stepper.scss'
 
-const stepsNames = ['Name', 'List', 'Cross-out', 'Group', 'Editor']
-
-const useStyles = makeStyles({
-  stepper: {
-    '&.MuiPaper-root': {
-      backgroundColor: 'inherit'
-    }
-  }
-})
+const stepsNames: string[] = ['Name', 'List', 'Cross-out', 'Group', 'Editor']
 
 const Stepper: FC = () => {
-  const classes = useStyles()
   const {
     active,
     activeToComplete,
@@ -49,7 +40,7 @@ const Stepper: FC = () => {
         <Step
           active={isActive}
           key={index}
-          disabled={!isCompleted(index) && !isActive && !allRequiredStepsCompleted()}
+          disabled={(!isCompleted(index) && !isActive) || !allRequiredStepsCompleted()}
           completed={isCompleted(index)}>
           <StepButton
             disableRipple={true}
@@ -68,7 +59,6 @@ const Stepper: FC = () => {
     <StylesProvider injectFirst>
       <MuiStepper
         connector={<CheatSheetStepConnector />}
-        className={classes.stepper}
         activeStep={active}
         orientation='vertical'>
         {renderSteps()}

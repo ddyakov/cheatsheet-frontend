@@ -98,6 +98,11 @@ const theme: Theme = createMuiTheme({
   },
   overrides: {
     MuiTypography: muiTypographyOverrides,
+    MuiFormLabel: {
+      root: {
+        color: secondaryLight
+      }
+    },
     MuiInputBase: {
       input: {
         color: secondaryMain
@@ -106,6 +111,29 @@ const theme: Theme = createMuiTheme({
     MuiOutlinedInput: {
       root: {
         borderRadius: borderRadius / 2
+      },
+      notchedOutline: {
+        borderColor: secondaryLight
+      }
+    },
+    MuiCssBaseline: {
+      '@global': {
+        '.MuiFormControl-root': {
+          '& label': {
+            '&.Mui-focused': {
+              color: secondaryLight
+            }
+          },
+          '& .MuiOutlinedInput-root': {
+            '&:hover fieldset': {
+              borderColor: secondaryMain
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: secondaryMain,
+              top: -4
+            }
+          }
+        }
       }
     }
   }

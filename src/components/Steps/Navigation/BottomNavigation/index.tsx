@@ -1,36 +1,35 @@
 import { Button, Grid, Link, Typography } from '@material-ui/core'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { FC, useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 import useStepsStore from '../../../../stores/StepsStore'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    previousStepLink: {
-      textDecoration: 'none',
-      color: theme.palette.secondary.dark
-    },
-    nextStepButton: {
-      backgroundColor: theme.palette.success.main,
-      '&:hover': {
-        backgroundColor: theme.palette.success.main
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  previousStepLink: {
+    textDecoration: 'none',
+    color: theme.palette.secondary.dark
+  },
+  nextStepButton: {
+    backgroundColor: theme.palette.success.main,
+    '&:hover': {
+      backgroundColor: theme.palette.success.main
     }
-  })
-)
+  }
+}))
 
 const StepsBottomNavigation: FC = () => {
   const classes = useStyles()
   const [showNextButton, setShowNextButton] = useState(true)
   const [showPrevious, setShowPrevious] = useState(false)
-  const { active, totalSteps, canGoToNextStep, getStepData, setState } = useStepsStore(
+  const { active, totalSteps, canGoToNextStep, getStepData, complete, setState } = useStepsStore(
     state => ({
       active: state.active,
       totalSteps: state.totalSteps,
       canGoToNextStep: state.canGoToNextStep,
       getStepData: state.getStepData,
+      complete: state.complete,
       setState: state.setState
     }),
     shallow
@@ -41,20 +40,12 @@ const StepsBottomNavigation: FC = () => {
     setShowPrevious(active > 0)
   }, [active, totalSteps])
 
-  const handleOnPreviousClick = () =>
-    setState(state => {
-      state.active--
-    })
+  const handleOnPreviousClick = () => setState(state => state.active--)
 
-  const handleOnNextClick = () =>
-    setState(state => {
-      if (!state.isCompleted(state.activeToComplete) && state.activeToComplete === state.active) {
-        state.complete(state.activeToComplete)
-        state.activeToComplete++
-      }
-
-      state.active++
-    })
+  const handleOnNextClick = () => {
+    complete(active)
+    setState(state => state.active++)
+  }
 
   return (
     <Grid container justify={showPrevious ? 'space-between' : 'flex-end'} alignItems='flex-end'>

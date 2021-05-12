@@ -1,3 +1,9 @@
+.MuiStepper-root {
+  &.MuiPaper-root {
+    background-color: inherit;
+  }
+}
+
 .MuiStepLabel {
   &-active#{&}-label,
   &-completed#{&}-label {
