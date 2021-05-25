@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
-const Editor: FC = () => {
+const EditorStep: FC = () => {
   return <div>Hello from Editor Step</div>
 }
 
-export default Editor
+export default EditorStep

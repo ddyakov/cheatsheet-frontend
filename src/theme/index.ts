@@ -116,6 +116,11 @@ const theme: Theme = createMuiTheme({
         borderColor: secondaryLight
       }
     },
+    MuiCollapse: {
+      hidden: {
+        display: 'none'
+      }
+    },
     MuiCssBaseline: {
       '@global': {
         '.MuiFormControl-root': {

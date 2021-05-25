@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { FC } from 'react'
 import shallow from 'zustand/shallow'
 import useStepsStore from '../../../stores/StepsStore'
+import { Topic } from '../../../types/store'
 
 const useStyles = makeStyles((theme: Theme) => ({
   topicsContainer: {
@@ -34,15 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const CrossOut: FC = () => {
+const CrossOutStep: FC = () => {
   const classes = useStyles()
-  const { topics, toggleCrossOut } = useStepsStore(
-    state => ({
-      topics: state.topics,
-      toggleCrossOut: state.toggleCrossOut
-    }),
-    shallow
-  )
+  const [topics, toggleCrossOutTopic] = useStepsStore(state => [state.topics, state.toggleCrossOutTopic], shallow)
 
   return (
     <Grid container spacing={4} direction='column'>
@@ -52,17 +47,13 @@ const CrossOut: FC = () => {
         </Typography>
       </Grid>
       <Grid item container className={classes.topicsContainer}>
-        <MuiList aria-label='topics list' className={classes.topics}>
-          {[...topics].map(topic => {
+        <MuiList aria-label='topics' className={classes.topics}>
+          {topics.map((topic: Topic) => {
+            const { id, name, crossedOut } = topic
+
             return (
-              <ListItem
-                key={topic.id}
-                className={classes.topic}
-                onClick={() => toggleCrossOut(topic.id)}>
-                <ListItemText
-                  primary={topic.title}
-                  className={clsx({ [classes.topicCrossedOut]: topic.crossedOut })}
-                />
+              <ListItem key={id} className={classes.topic} onClick={() => toggleCrossOutTopic(id)}>
+                <ListItemText primary={name} className={clsx({ [classes.topicCrossedOut]: crossedOut })} />
               </ListItem>
             )
           })}
@@ -72,4 +63,4 @@ const CrossOut: FC = () => {
   )
 }
 
-export default CrossOut
+export default CrossOutStep

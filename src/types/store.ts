@@ -1,4 +1,5 @@
 import { WritableDraft } from 'immer/dist/internal'
+import { DraggableLocation } from 'react-beautiful-dnd'
 import { State } from 'zustand'
 
 export interface StepData {
@@ -8,10 +9,16 @@ export interface StepData {
 }
 
 export interface Topic {
-  id: number
-  title: string
+  id: string
+  name: string
   crossedOut: boolean
-  groupId?: number | null
+  groupId?: string | null
+}
+
+export interface TopicGroup {
+  id: string
+  name: string
+  topics: Topic[]
 }
 
 export interface StepsStore extends State {
@@ -22,14 +29,19 @@ export interface StepsStore extends State {
   canGoToNextStep: boolean
   subject: string
   topics: Topic[]
+  tempTopics: Topic[]
+  topicGroups: TopicGroup[]
   isCompleted: (step: number) => boolean
   complete: (step: number) => void
   incomplete: (step: number) => void
   allRequiredStepsCompleted: () => boolean
   getActiveStepData: () => StepData
-  addTopic: (title: string) => void
-  deleteTopic: (id: number) => void
-  toggleCrossOut: (id: number) => void
   getStepData: (step: number) => StepData
+  addTopic: (name: string) => void
+  deleteTopic: (id: string) => void
+  toggleCrossOutTopic: (id: string) => void
+  groupTopics: (draggedTopicId: string, groupedWithTopicId: string) => void
+  moveTopic: (source: DraggableLocation, destination: DraggableLocation) => void
+  renameTopicGroup: (id: string, newName: string) => void
   setState: (fn: (draft: WritableDraft<StepsStore>) => void) => void
 }

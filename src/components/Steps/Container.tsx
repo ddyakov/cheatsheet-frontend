@@ -2,9 +2,9 @@ import { Container as MuiContainer, Grid, Paper } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { FC, ReactNode, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import useStepsStore from '../../../stores/StepsStore'
-import LeftPanel from '../LeftPanel'
-import StepsBottomNavigation from '../Navigation/BottomNavigation'
+import useStepsStore from '../../stores/StepsStore'
+import LeftPanel from './LeftPanel'
+import StepsBottomNavigation from './Navigation/BottomNavigation'
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {

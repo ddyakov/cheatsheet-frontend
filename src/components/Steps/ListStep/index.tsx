@@ -13,6 +13,7 @@ import clsx from 'clsx'
 import { FC, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 import useStepsStore from '../../../stores/StepsStore'
+import { Topic } from '../../../types/store'
 import CheatSheetOutlinedInput from '../../Common/CheatSheetOutlinedInput'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,17 +45,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const List: FC = () => {
+const ListStep: FC = () => {
   const classes = useStyles()
-  const { active, topics, addTopic, deleteTopic, incomplete, setState } = useStepsStore(
-    state => ({
-      active: state.active,
-      topics: state.topics,
-      addTopic: state.addTopic,
-      deleteTopic: state.deleteTopic,
-      incomplete: state.incomplete,
-      setState: state.setState
-    }),
+  const [active, topics, addTopic, deleteTopic, incomplete, setState] = useStepsStore(
+    state => [state.active, state.topics, state.addTopic, state.deleteTopic, state.incomplete, state.setState],
     shallow
   )
 
@@ -78,16 +72,15 @@ const List: FC = () => {
       </Grid>
       <Grid item container className={classes.topicsContainer}>
         {topics.length ? (
-          <MuiList aria-label='topics list' className={classes.topics}>
-            {[...topics].map(topic => {
+          <MuiList aria-label='topics' className={classes.topics}>
+            {topics.map((topic: Topic) => {
+              const { id, name } = topic
+
               return (
-                <ListItem key={topic.id} className={classes.topic}>
-                  <ListItemText primary={topic.title} />
+                <ListItem key={id} className={classes.topic}>
+                  <ListItemText primary={name} />
                   <ListItemSecondaryAction>
-                    <IconButton
-                      onClick={() => deleteTopic(topic.id)}
-                      edge='end'
-                      aria-label='delete'>
+                    <IconButton onClick={() => deleteTopic(id)} edge='end' aria-label='delete topic'>
                       <DeleteRoundedIcon color='primary' />
                     </IconButton>
                   </ListItemSecondaryAction>
@@ -96,13 +89,11 @@ const List: FC = () => {
             })}
           </MuiList>
         ) : (
-          <div className={clsx(classes.topics, classes.topicsEmpty)}>
-            You do not have any topics yet
-          </div>
+          <div className={clsx(classes.topics, classes.topicsEmpty)}>You do not have any topics yet</div>
         )}
       </Grid>
     </Grid>
   )
 }
 
-export default List
+export default ListStep

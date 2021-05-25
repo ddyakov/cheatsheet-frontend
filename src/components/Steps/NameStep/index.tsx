@@ -2,7 +2,7 @@ import TextField from '@material-ui/core/TextField'
 import { FC, useEffect, useState } from 'react'
 import useStepsStore from '../../../stores/StepsStore'
 
-const Name: FC = () => {
+const NameStep: FC = () => {
   const { active, subject, incomplete, setState } = useStepsStore(state => ({
     active: state.active,
     subject: state.subject,
@@ -39,4 +39,4 @@ const Name: FC = () => {
   )
 }
 
-export default Name
+export default NameStep

@@ -3,7 +3,7 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import { FC } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './components/Home'
-import { Container, CrossOut, Editor, Group, List, Name } from './components/Steps'
+import { Container, CrossOutStep, EditorStep, GroupStep, ListStep, NameStep } from './components/Steps'
 import theme from './theme'
 
 const App: FC = () => {
@@ -14,11 +14,11 @@ const App: FC = () => {
         <Switch>
           <Route exact path='/' component={Home} />
           <Container>
-            <Route exact path='/steps/name' component={Name} />
-            <Route exact path='/steps/list' component={List} />
-            <Route exact path='/steps/cross-out' component={CrossOut} />
-            <Route exact path='/steps/group' component={Group} />
-            <Route exact path='/steps/editor' component={Editor} />
+            <Route exact path='/steps/name' component={NameStep} />
+            <Route exact path='/steps/list' component={ListStep} />
+            <Route exact path='/steps/cross-out' component={CrossOutStep} />
+            <Route exact path='/steps/group' component={GroupStep} />
+            <Route exact path='/steps/editor' component={EditorStep} />
           </Container>
         </Switch>
       </Router>
