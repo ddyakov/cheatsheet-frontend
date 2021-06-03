@@ -46,35 +46,38 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
       }
     },
     groupContainer: {
-      backgroundColor: 'inherit',
-      marginBottom: spacing(2),
-
-      '&.Mui-expanded': {
-        margin: 0
-      },
-      '&::before': {
-        content: 'unset'
+      '&.MuiAccordion-root': {
+        backgroundColor: 'inherit',
+        marginBottom: spacing(2),
+        '&.Mui-expanded': {
+          margin: 0
+        },
+        '&::before': {
+          content: 'unset'
+        }
       }
     },
     groupListContainer: {
       padding: `${spacing(2)}px ${spacing(3)}px 0 ${spacing(3)}px`
     },
     groupHeader: {
-      backgroundColor: palette.common.white,
-      borderRadius: shape.borderRadius / 2,
-      padding: `${spacing()}px ${spacing(2)}px`,
-      wordBreak: 'break-all',
+      '&.MuiAccordionSummary-root': {
+        backgroundColor: palette.common.white,
+        borderRadius: shape.borderRadius / 2,
+        padding: `${spacing()}px ${spacing(2)}px`,
+        wordBreak: 'break-all',
 
-      '&.Mui-expanded': {
-        minHeight: 'auto'
-      },
-      '& .MuiAccordionSummary-content': {
-        margin: `${spacing() / 2}px 0`
-      },
-      '& .MuiAccordionSummary-expandIcon': {
-        padding: 0,
-        '&.MuiIconButton-edgeEnd': {
-          marginRight: 0
+        '&.Mui-expanded': {
+          minHeight: 'auto'
+        },
+        '& .MuiAccordionSummary-content': {
+          margin: `${spacing() / 2}px 0`
+        },
+        '& .MuiAccordionSummary-expandIcon': {
+          padding: 0,
+          '&.MuiIconButton-edgeEnd': {
+            marginRight: 0
+          }
         }
       }
     },
