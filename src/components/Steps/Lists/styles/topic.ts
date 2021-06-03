@@ -58,7 +58,9 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
       }
     },
     groupListContainer: {
-      padding: `${spacing(2)}px ${spacing(3)}px 0 ${spacing(3)}px`
+      '&.MuiAccordionDetails-root': {
+        padding: `${spacing(2)}px ${spacing(3)}px 0 ${spacing(3)}px`
+      }
     },
     groupHeader: {
       '&.MuiAccordionSummary-root': {
@@ -82,8 +84,10 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
       }
     },
     groupEditButton: {
-      padding: 0,
-      marginLeft: spacing(2)
+      '&.MuiIconButton-root': {
+        padding: 0,
+        marginLeft: spacing(2)
+      }
     }
   })
 
