@@ -1,6 +1,4 @@
-import { FC } from 'react'
-
-const EditorStep: FC = () => {
+const EditorStep = () => {
   return <div>Hello from Editor Step</div>
 }
 

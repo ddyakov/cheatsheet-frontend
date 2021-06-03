@@ -1,41 +1,32 @@
+import { makeStyles } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
-import { FC, useEffect, useState } from 'react'
+import shallow from 'zustand/shallow'
 import useStepsStore from '../../../stores/StepsStore'
 
-const NameStep: FC = () => {
-  const { active, subject, incomplete, setState } = useStepsStore(state => ({
-    active: state.active,
-    subject: state.subject,
-    incomplete: state.incomplete,
-    setState: state.setState
-  }))
-  const [subjectName, setSubjectName] = useState(subject)
+const useStyles = makeStyles(() => ({
+  subjectTextFieldContainer: {
+    display: 'flex',
+    flexGrow: 1,
+    alignItems: 'center'
+  }
+}))
 
-  useEffect(() => {
-    const newSubject = subjectName.trim()
-    const hasSubject = newSubject.length > 0
-
-    setState(state => {
-      state.subject = newSubject
-      state.canGoToNextStep = hasSubject
-    })
-
-    !hasSubject && incomplete(active)
-
-    return () => setState(state => (state.canGoToNextStep = false))
-  }, [active, subjectName, incomplete, setState])
+const NameStep = () => {
+  const classes = useStyles()
+  const [subject, setSubject] = useStepsStore(state => [state.subject, state.setSubject], shallow)
 
   return (
-    // TODO:change the id of the TextField to something else, or make the TextField generic
-    <TextField
-      id='outlined-basic'
-      label='What are you studying for?'
-      variant='outlined'
-      fullWidth
-      value={subjectName}
-      style={{ alignSelf: 'center' }}
-      onChange={e => setSubjectName(e.target.value)}
-    />
+    <div className={classes.subjectTextFieldContainer}>
+      <TextField
+        id='subject'
+        label='What are you studying for?'
+        fullWidth={true}
+        value={subject}
+        onChange={e => setSubject(e.target.value)}
+        onBlur={e => setSubject(e.target.value.trim())}
+        autoComplete='off'
+      />
+    </div>
   )
 }
 

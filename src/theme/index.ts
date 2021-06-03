@@ -98,22 +98,29 @@ const theme: Theme = createMuiTheme({
   },
   overrides: {
     MuiTypography: muiTypographyOverrides,
-    MuiFormLabel: {
+    MuiButton: {
       root: {
-        color: secondaryLight
+        textTransform: 'none'
       }
     },
-    MuiInputBase: {
-      input: {
+    MuiFormLabel: {
+      root: {
         color: secondaryMain
       }
     },
-    MuiOutlinedInput: {
+    MuiInputBase: {
       root: {
-        borderRadius: borderRadius / 2
-      },
-      notchedOutline: {
-        borderColor: secondaryLight
+        color: secondaryMain
+      }
+    },
+    MuiInput: {
+      underline: {
+        '&:before, &:hover:not(.Mui-disabled):before': {
+          borderBottom: `1px solid ${secondaryMain}`
+        },
+        '&:after': {
+          borderBottomColor: secondaryMain
+        }
       }
     },
     MuiCollapse: {
@@ -125,17 +132,8 @@ const theme: Theme = createMuiTheme({
       '@global': {
         '.MuiFormControl-root': {
           '& label': {
-            '&.Mui-focused': {
+            '&.Mui-focused, &.MuiFormLabel-filled': {
               color: secondaryLight
-            }
-          },
-          '& .MuiOutlinedInput-root': {
-            '&:hover fieldset': {
-              borderColor: secondaryMain
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: secondaryMain,
-              top: -4
             }
           }
         }

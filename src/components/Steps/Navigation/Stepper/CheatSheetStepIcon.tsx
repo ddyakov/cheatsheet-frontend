@@ -2,7 +2,6 @@ import { StepIconProps, Typography } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import DoneRoundedIcon from '@material-ui/icons/DoneRounded'
 import clsx from 'clsx'
-import { FC } from 'react'
 
 const useCheatSheetStepIconStyles = makeStyles((theme: Theme) => ({
   outerContainer: {
@@ -33,16 +32,15 @@ const useCheatSheetStepIconStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const CheatSheetStepIcon: FC<StepIconProps> = props => {
+const CheatSheetStepIcon = ({ active, completed, icon }: StepIconProps) => {
   const classes = useCheatSheetStepIconStyles()
-  const { active, completed, icon } = props
 
   const renderStepIconLabel = (): JSX.Element =>
-    completed ? <DoneRoundedIcon fontSize='small' /> : <Typography variant='h6'>{icon}</Typography>
+    completed && !active ? <DoneRoundedIcon fontSize='small' /> : <Typography variant='h6'>{icon}</Typography>
 
   return (
-    <span className={clsx(classes.outerContainer, { [classes.completed]: completed })}>
-      {active && !completed ? (
+    <span className={clsx(classes.outerContainer, { [classes.completed]: completed && !active })}>
+      {active ? (
         <span className={clsx({ [classes.innerContainer]: active })}>{renderStepIconLabel()}</span>
       ) : (
         renderStepIconLabel()

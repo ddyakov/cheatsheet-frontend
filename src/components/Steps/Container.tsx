@@ -1,35 +1,48 @@
-import { Container as MuiContainer, Grid, Paper } from '@material-ui/core'
+import { Paper } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import useStepsStore from '../../stores/StepsStore'
 import LeftPanel from './LeftPanel'
 import StepsBottomNavigation from './Navigation/BottomNavigation'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
   body: {
-    background: `linear-gradient(103.67deg, ${theme.palette.common.white} 0%, ${theme.palette.secondary.light} 100%)`
+    background: `linear-gradient(103.67deg, ${palette.common.white} 0%, ${palette.secondary.light} 100%)`
   },
-  stepContainer: {
+  stepOuterContainer: {
     display: 'flex',
+    flexGrow: 1,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: '100vh'
+    minHeight: '100vh',
+    padding: `0 ${spacing(3)}px`
+  },
+  stepInnerContainer: {
+    display: 'flex',
+    width: '100%',
+    maxWidth: 830
+  },
+  stepOuterContentContainer: {
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
+    padding: spacing(4)
+  },
+  stepInnerContentContainer: {
+    display: 'flex',
+    flexGrow: 1,
+    paddingBottom: spacing(4)
   },
   stepContent: {
-    padding: theme.spacing(4)
-  },
-  stepContentContainer: {
+    display: 'flex',
     flexGrow: 1,
-    paddingBottom: theme.spacing(4)
+    flexDirection: 'column'
   }
 }))
 
-interface ComponentProps {
-  children: ReactNode
-}
-
-const Container: FC<ComponentProps> = ({ children }) => {
+const Container: FC = ({ children }) => {
   const classes = useStyles()
   const history = useHistory()
   const { route } = useStepsStore(state => state.getActiveStepData())
@@ -39,19 +52,17 @@ const Container: FC<ComponentProps> = ({ children }) => {
   useEffect(() => document.body.classList.add(classes.body), [classes.body])
 
   return (
-    <MuiContainer maxWidth='md' className={classes.stepContainer}>
-      <Paper elevation={4}>
-        <Grid container>
-          <LeftPanel />
-          <Grid container item xs={12} md={7} direction='column' className={classes.stepContent}>
-            <Grid container justify='center' className={classes.stepContentContainer}>
-              {children}
-            </Grid>
-            <StepsBottomNavigation />
-          </Grid>
-        </Grid>
+    <div className={classes.stepOuterContainer}>
+      <Paper elevation={4} className={classes.stepInnerContainer}>
+        <LeftPanel />
+        <div className={classes.stepOuterContentContainer}>
+          <div className={classes.stepInnerContentContainer}>
+            <div className={classes.stepContent}>{children}</div>
+          </div>
+          <StepsBottomNavigation />
+        </div>
       </Paper>
-    </MuiContainer>
+    </div>
   )
 }
 

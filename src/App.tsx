@@ -1,12 +1,11 @@
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
-import { FC } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './components/Home'
 import { Container, CrossOutStep, EditorStep, GroupStep, ListStep, NameStep } from './components/Steps'
 import theme from './theme'
 
-const App: FC = () => {
+const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

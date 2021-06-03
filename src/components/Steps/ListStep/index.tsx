@@ -1,98 +1,84 @@
-import {
-  Grid,
-  IconButton,
-  List as MuiList,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  Typography
-} from '@material-ui/core'
+import { IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@material-ui/core'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded'
-import clsx from 'clsx'
-import { FC, useEffect } from 'react'
+import AddIcon from '@material-ui/icons/Add'
+import { useCallback, useEffect, useState } from 'react'
 import shallow from 'zustand/shallow'
 import useStepsStore from '../../../stores/StepsStore'
-import { Topic } from '../../../types/store'
-import CheatSheetOutlinedInput from '../../Common/CheatSheetOutlinedInput'
+import { TopicStylesProps } from '../../../types/topic'
+import DeleteSecondaryAction from '../Lists/SecondaryActions/DeleteSecondaryAction'
+import useTopicStyles from '../Lists/styles/topic'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  topicsContainer: {
-    flexGrow: 1,
-    maxHeight: 425
-  },
-  topics: {
-    width: '100%',
-    height: '100%',
-    overflowY: 'auto',
-    backgroundColor: theme.palette.grey[100],
-    borderRadius: theme.shape.borderRadius / 2,
-    padding: theme.spacing(2)
-  },
-  topicsEmpty: {
+const topicStylesOverrides: TopicStylesProps = {
+  list: {
+    maxHeight: 515,
+    overflowY: 'auto'
+  }
+}
+
+const useStyles = makeStyles(({ spacing }: Theme) => ({
+  topicInputContainerAlone: {
     display: 'flex',
-    justifyContent: 'center',
+    flexGrow: 1,
     alignItems: 'center',
-    color: theme.palette.primary.light
+    transition: 'flex-grow 0.5s ease-in-out'
   },
-  topic: {
-    backgroundColor: theme.palette.common.white,
-    borderRadius: theme.shape.borderRadius / 2,
-    '&:not(:last-child)': {
-      marginBottom: theme.spacing(2)
-    },
-    wordBreak: 'break-all'
+  topicInputContainer: {
+    paddingBottom: spacing(3)
   }
 }))
 
-const ListStep: FC = () => {
+const ListStep = () => {
   const classes = useStyles()
-  const [active, topics, addTopic, deleteTopic, incomplete, setState] = useStepsStore(
-    state => [state.active, state.topics, state.addTopic, state.deleteTopic, state.incomplete, state.setState],
+  const [inputValue, setInputValue] = useState('')
+  const topicClasses = useTopicStyles(topicStylesOverrides)
+  const [topics, addTopic, deleteTopic, setStepState] = useStepsStore(
+    state => [state.topics, state.addTopic, state.deleteTopic, state.setStepState],
     shallow
   )
+  const hasTopics = useCallback(() => !!topics.length, [topics])
 
-  useEffect(() => {
-    const hasTopics = topics.length > 0
-    setState(state => (state.canGoToNextStep = hasTopics))
-    !hasTopics && incomplete(active)
-  }, [active, topics, incomplete, setState])
+  const handleOnAddTopicClick = () => {
+    inputValue && addTopic(inputValue.trim())
+    setInputValue('')
+  }
 
-  const handleOnAddTopicClick = (title: string) => addTopic(title)
+  // eslint-disable-next-line
+  useEffect(() => setStepState(!!topics.length), [topics])
 
   return (
-    <Grid container spacing={4} direction='column'>
-      <Grid item>
-        <Typography variant='h5' color='primary'>
-          My Topics
-        </Typography>
-      </Grid>
-      <Grid item>
-        <CheatSheetOutlinedInput handleOnAddTopicClick={handleOnAddTopicClick} />
-      </Grid>
-      <Grid item container className={classes.topicsContainer}>
-        {topics.length ? (
-          <MuiList aria-label='topics' className={classes.topics}>
-            {topics.map((topic: Topic) => {
-              const { id, name } = topic
-
-              return (
-                <ListItem key={id} className={classes.topic}>
-                  <ListItemText primary={name} />
-                  <ListItemSecondaryAction>
-                    <IconButton onClick={() => deleteTopic(id)} edge='end' aria-label='delete topic'>
-                      <DeleteRoundedIcon color='primary' />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              )
-            })}
-          </MuiList>
-        ) : (
-          <div className={clsx(classes.topics, classes.topicsEmpty)}>You do not have any topics yet</div>
-        )}
-      </Grid>
-    </Grid>
+    <>
+      <div className={hasTopics() ? classes.topicInputContainer : classes.topicInputContainerAlone}>
+        <FormControl fullWidth={true}>
+          <InputLabel htmlFor='topic-input'>Enter a topic...</InputLabel>
+          <Input
+            id='topic-input'
+            value={inputValue}
+            autoComplete='off'
+            onChange={e => setInputValue(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleOnAddTopicClick()}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton aria-label='add' edge='end' color='secondary' onClick={handleOnAddTopicClick}>
+                  <AddIcon />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      </div>
+      {hasTopics() ? (
+        <List className={topicClasses.list}>
+          {topics.map(({ id, name }) => (
+            <ListItem key={id} className={topicClasses.listItem}>
+              <ListItemText primary={name} color='primary' />
+              <DeleteSecondaryAction deleteListItemHandler={() => deleteTopic(id)} />
+            </ListItem>
+          ))}
+        </List>
+      ) : null}
+    </>
   )
 }
 

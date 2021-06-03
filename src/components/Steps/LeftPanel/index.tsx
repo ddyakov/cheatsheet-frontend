@@ -1,32 +1,30 @@
-import { Grid } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { FC } from 'react'
 import { Stepper } from '../Navigation'
 import Header from './Header'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  leftPanel: {
-    borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(4),
-    backgroundColor: theme.palette.primary.main
+const useStyles = makeStyles(({ palette, shape, spacing }: Theme) => ({
+  leftPanelContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 320,
+    minWidth: 320,
+    borderRadius: shape.borderRadius,
+    padding: spacing(4),
+    paddingBottom: spacing(12),
+    backgroundColor: palette.primary.main
   }
 }))
 
-const LeftPanel: FC = () => {
+const LeftPanel = () => {
   const classes = useStyles()
 
   return (
-    <Grid
-      container
-      item
-      xs={12}
-      md={5}
-      direction='column'
-      alignItems='center'
-      className={classes.leftPanel}>
+    <div className={classes.leftPanelContainer}>
       <Header />
       <Stepper />
-    </Grid>
+    </div>
   )
 }
 

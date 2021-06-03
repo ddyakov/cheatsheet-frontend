@@ -1,6 +1,6 @@
-import { WritableDraft } from 'immer/dist/internal'
 import { DraggableLocation } from 'react-beautiful-dnd'
 import { State } from 'zustand'
+import { Topic, TopicGroup } from './topic'
 
 export interface StepData {
   title: string
@@ -8,40 +8,28 @@ export interface StepData {
   route: string
 }
 
-export interface Topic {
-  id: string
-  name: string
-  crossedOut: boolean
-  groupId?: string | null
-}
-
-export interface TopicGroup {
-  id: string
-  name: string
-  topics: Topic[]
-}
-
 export interface StepsStore extends State {
-  active: number
-  activeToComplete: number
+  activeStep: number
   totalSteps: number
-  completed: { [step: number]: boolean }
-  canGoToNextStep: boolean
+  completedSteps: boolean[]
   subject: string
   topics: Topic[]
-  tempTopics: Topic[]
+  ungroupedTopics: Topic[]
   topicGroups: TopicGroup[]
-  isCompleted: (step: number) => boolean
-  complete: (step: number) => void
-  incomplete: (step: number) => void
-  allRequiredStepsCompleted: () => boolean
+  setSubject: (subject: string) => void
+  // Steps
   getActiveStepData: () => StepData
   getStepData: (step: number) => StepData
+  setActiveStep: (step: number) => void
+  setStepState: (complete: boolean, step?: number) => void
+  isStepCompleted: (step: number) => boolean
+  isStepRequired: (step: number) => boolean
+  allRequiredStepsCompleted: () => boolean
+  // Topics
   addTopic: (name: string) => void
   deleteTopic: (id: string) => void
   toggleCrossOutTopic: (id: string) => void
   groupTopics: (draggedTopicId: string, groupedWithTopicId: string) => void
-  moveTopic: (source: DraggableLocation, destination: DraggableLocation) => void
+  moveTopic: (sourceTopicGroupLocation: DraggableLocation, destinationTopicGroupLocation: DraggableLocation) => void
   renameTopicGroup: (id: string, newName: string) => void
-  setState: (fn: (draft: WritableDraft<StepsStore>) => void) => void
 }

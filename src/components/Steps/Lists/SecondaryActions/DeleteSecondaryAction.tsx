@@ -1,16 +1,15 @@
 import { IconButton, ListItemSecondaryAction } from '@material-ui/core'
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded'
-import { FC, MouseEventHandler } from 'react'
+import { MouseEventHandler } from 'react'
 
-interface ComponentProps {
-  ariaLabel: string
+interface DeleteSecondaryActionProps {
   deleteListItemHandler: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
-const DeleteSecondaryAction: FC<ComponentProps> = ({ ariaLabel, deleteListItemHandler }) => {
+const DeleteSecondaryAction = ({ deleteListItemHandler }: DeleteSecondaryActionProps) => {
   return (
     <ListItemSecondaryAction>
-      <IconButton onClick={deleteListItemHandler} edge='end' aria-label={ariaLabel}>
+      <IconButton onClick={deleteListItemHandler} edge='end' aria-label='delete'>
         <DeleteRoundedIcon color='primary' />
       </IconButton>
     </ListItemSecondaryAction>

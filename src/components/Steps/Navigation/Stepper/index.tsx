@@ -1,7 +1,8 @@
 import { Step, StepButton, Stepper as MuiStepper } from '@material-ui/core'
 import { StylesProvider } from '@material-ui/core/styles'
-import { FC } from 'react'
+import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import shallow from 'zustand/shallow'
 import useStepsStore from '../../../../stores/StepsStore'
 import CheatSheetStepConnector from './CheatSheetStepConnector'
 import CheatSheetStepIcon from './CheatSheetStepIcon'
@@ -10,58 +11,51 @@ import './Stepper.scss'
 
 const stepsNames: string[] = ['Name', 'List', 'Cross-out', 'Group', 'Editor']
 
-const Stepper: FC = () => {
-  const {
-    active,
-    activeToComplete,
-    isCompleted,
+const Stepper = () => {
+  const [
+    activeStep,
+    completedSteps,
+    setActiveStep,
+    isStepCompleted,
     allRequiredStepsCompleted,
-    getStepData,
-    setState
-  } = useStepsStore(state => ({
-    active: state.active,
-    activeToComplete: state.activeToComplete,
-    isCompleted: state.isCompleted,
-    allRequiredStepsCompleted: state.allRequiredStepsCompleted,
-    getStepData: state.getStepData,
-    setState: state.setState
-  }))
+    getStepData
+  ] = useStepsStore(
+    state => [
+      state.activeStep,
+      state.completedSteps,
+      state.setActiveStep,
+      state.isStepCompleted,
+      state.allRequiredStepsCompleted,
+      state.getStepData
+    ],
+    shallow
+  )
 
-  const handleOnStepButtonClick = (step: number) =>
-    setState(state => {
-      state.active = step
-    })
-
-  const renderSteps = (): JSX.Element[] =>
-    stepsNames.map((label, index) => {
-      const isActive = activeToComplete === index
-
-      return (
+  const renderStepsCallback = useCallback(
+    () =>
+      stepsNames.map((label, index) => (
         <Step
-          active={isActive}
+          active={activeStep === index}
           key={index}
-          disabled={(!isCompleted(index) && !isActive) || !allRequiredStepsCompleted()}
-          completed={isCompleted(index)}>
+          disabled={!isStepCompleted(index) || !allRequiredStepsCompleted()}
+          completed={isStepCompleted(index)}>
           <StepButton
             disableRipple={true}
-            onClick={() => handleOnStepButtonClick(index)}
+            onClick={() => setActiveStep(index)}
             component={Link}
             to={getStepData(index).route}>
-            <CheatSheetStepLabel StepIconComponent={CheatSheetStepIcon}>
-              {label}
-            </CheatSheetStepLabel>
+            <CheatSheetStepLabel StepIconComponent={CheatSheetStepIcon}>{label}</CheatSheetStepLabel>
           </StepButton>
         </Step>
-      )
-    })
+      )),
+    // eslint-disable-next-line
+    [activeStep, completedSteps, setActiveStep, isStepCompleted, getStepData, allRequiredStepsCompleted]
+  )
 
   return (
-    <StylesProvider injectFirst>
-      <MuiStepper
-        connector={<CheatSheetStepConnector />}
-        activeStep={active}
-        orientation='vertical'>
-        {renderSteps()}
+    <StylesProvider injectFirst={true}>
+      <MuiStepper connector={<CheatSheetStepConnector />} activeStep={activeStep} orientation='vertical'>
+        {renderStepsCallback()}
       </MuiStepper>
     </StylesProvider>
   )

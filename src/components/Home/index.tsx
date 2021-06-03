@@ -1,10 +1,7 @@
-// React imports A-Z
-import { FC } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-// Local imports A-Z
 import './Home.scss'
 
-const Home: FC = () => {
+const Home = () => {
   const location = useLocation()
 
   return (

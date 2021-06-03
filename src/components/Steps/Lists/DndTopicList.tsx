@@ -1,66 +1,58 @@
-import { List, ListItem, ListItemText, makeStyles, Theme } from '@material-ui/core'
-import { FC } from 'react'
-import { Draggable, DraggableProvided, Droppable, DroppableProvided } from 'react-beautiful-dnd'
-import { Topic } from '../../../types/store'
+import { List, ListItem, ListItemText, useTheme } from '@material-ui/core'
+import clsx from 'clsx'
+import { CSSProperties } from 'react'
+import {
+  Draggable,
+  DraggableProvided,
+  DraggingStyle,
+  Droppable,
+  DroppableProvided,
+  NotDraggingStyle
+} from 'react-beautiful-dnd'
+import { Topic } from '../../../types/topic'
+import useTopicStyles from './styles/topic'
 
-interface ComponentProps {
+interface DndTopicListProps {
   topics: Topic[]
+  listStyle?: CSSProperties
   droppableId: string
   isCombineEnabled?: boolean
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  topicListItem: {
-    backgroundColor: theme.palette.common.white,
-    borderRadius: theme.shape.borderRadius / 2,
-    wordBreak: 'break-all',
-    transition: 'all 0.1s ease-in-out',
+const DndTopicList = ({ topics, listStyle, droppableId, isCombineEnabled = false }: DndTopicListProps) => {
+  const topicClasses = useTopicStyles()
+  const theme = useTheme()
 
-    '&:not(:last-child)': {
-      marginBottom: theme.spacing(2)
-    },
-    '&:hover': {
-      boxShadow: theme.shadows[3],
-      transform: 'scale(1.02, 1.02)'
-    }
-  }
-}))
-
-const DndTopicList: FC<ComponentProps> = ({ topics, droppableId, isCombineEnabled }) => {
-  const classes = useStyles()
-
-  const renderTopicListItem = (id: string, name: string, index: number): JSX.Element => (
-    <Draggable key={id} draggableId={id} index={index}>
-      {(provided: DraggableProvided) => (
-        <ListItem
-          key={id}
-          className={classes.topicListItem}
-          ref={provided.innerRef}
-          style={provided.draggableProps.style}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}>
-          <ListItemText primary={name} />
-        </ListItem>
-      )}
-    </Draggable>
-  )
+  const getListItemStyles = (draggableStyle: DraggingStyle | NotDraggingStyle | undefined): CSSProperties => ({
+    userSelect: 'none',
+    marginBottom: theme.spacing(2),
+    ...draggableStyle
+  })
 
   return (
     <Droppable droppableId={droppableId} isCombineEnabled={isCombineEnabled}>
       {(provided: DroppableProvided) => (
-        <List aria-label='droppable-topic-list' ref={provided.innerRef} {...provided.droppableProps}>
-          {topics.map(({ id, name }, index: number) => renderTopicListItem(id, name, index))}
-
+        <List ref={provided.innerRef} aria-label='List' style={listStyle}>
+          {topics.map(({ id, name }, index) => (
+            <Draggable key={id} draggableId={id} index={index}>
+              {(provided: DraggableProvided, snapshot) => (
+                <ListItem
+                  key={id}
+                  className={clsx(topicClasses.listItem, topicClasses.listItemHoverShadow)}
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  style={getListItemStyles(provided.draggableProps.style)}>
+                  <ListItemText primary={name} />
+                </ListItem>
+              )}
+            </Draggable>
+          ))}
           {provided.placeholder}
         </List>
       )}
     </Droppable>
   )
-}
-
-DndTopicList.defaultProps = {
-  topics: [],
-  isCombineEnabled: false
 }
 
 export default DndTopicList
