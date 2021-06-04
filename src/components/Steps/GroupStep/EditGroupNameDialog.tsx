@@ -38,6 +38,7 @@ const EditGroupNameDialog = ({ open, onSaveHandler, onCloseHandler, name, setNam
         <TextField
           id='group-name'
           label='What is the new name?'
+          variant='standard'
           fullWidth={true}
           autoFocus={true}
           value={name}
