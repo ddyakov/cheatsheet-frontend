@@ -142,6 +142,13 @@ const theme: Theme = createTheme({
         }
       }
     },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: {
+          minWidth: 40
+        }
+      }
+    },
     MuiCssBaseline: {
       styleOverrides: {
         '.MuiFormControl-root': {

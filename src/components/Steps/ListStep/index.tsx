@@ -79,7 +79,8 @@ const ListStep = () => {
           />
         </FormControl>
       </div>
-      {hasTopics() ? (
+
+      {hasTopics() && (
         <List className={topicClasses.list}>
           <TransitionGroup>
             {topics.map(({ id, name, groupId }) => (
@@ -99,7 +100,7 @@ const ListStep = () => {
             ))}
           </TransitionGroup>
         </List>
-      ) : null}
+      )}
     </>
   )
 }

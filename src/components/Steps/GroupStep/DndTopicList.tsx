@@ -1,4 +1,5 @@
-import { List, ListItem, ListItemText, useTheme } from '@material-ui/core'
+import { List, ListItem, ListItemIcon, ListItemText, useTheme } from '@material-ui/core'
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import clsx from 'clsx'
 import { CSSProperties } from 'react'
 import {
@@ -43,6 +44,9 @@ const DndTopicList = ({ topics, listStyle, droppableId, isCombineEnabled = false
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                   style={getListItemStyles(provided.draggableProps.style)}>
+                  <ListItemIcon>
+                    <DragIndicatorIcon color='primary' fontSize='small' />
+                  </ListItemIcon>
                   <ListItemText primary={name} />
                 </ListItem>
               )}
