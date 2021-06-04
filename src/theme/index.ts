@@ -1,4 +1,4 @@
-import { createMuiTheme, Theme } from '@material-ui/core/styles'
+import { createTheme, Theme } from '@material-ui/core/styles'
 import { PaletteOptions } from '@material-ui/core/styles/createPalette'
 import { TypographyOptions } from '@material-ui/core/styles/createTypography'
 import {
@@ -90,46 +90,60 @@ const typography: TypographyOptions = {
   }
 }
 
-const theme: Theme = createMuiTheme({
+const theme: Theme = createTheme({
   palette: palette,
   typography: typography,
   shape: {
     borderRadius: borderRadius
   },
-  overrides: {
-    MuiTypography: muiTypographyOverrides,
+  components: {
+    MuiTypography: {
+      styleOverrides: {
+        ...muiTypographyOverrides
+      }
+    },
     MuiButton: {
-      root: {
-        textTransform: 'none'
+      styleOverrides: {
+        root: {
+          textTransform: 'none'
+        }
       }
     },
     MuiFormLabel: {
-      root: {
-        color: secondaryMain
+      styleOverrides: {
+        root: {
+          color: secondaryMain
+        }
       }
     },
     MuiInputBase: {
-      root: {
-        color: secondaryMain
+      styleOverrides: {
+        root: {
+          color: secondaryMain
+        }
       }
     },
     MuiInput: {
-      underline: {
-        '&:before, &:hover:not(.Mui-disabled):before': {
-          borderBottom: `1px solid ${secondaryMain}`
-        },
-        '&:after': {
-          borderBottomColor: secondaryMain
+      styleOverrides: {
+        underline: {
+          '&:before, &:hover:not(.Mui-disabled):before': {
+            borderBottom: `1px solid ${secondaryMain}`
+          },
+          '&:after': {
+            borderBottomColor: secondaryMain
+          }
         }
       }
     },
     MuiCollapse: {
-      hidden: {
-        display: 'none'
+      styleOverrides: {
+        hidden: {
+          display: 'none'
+        }
       }
     },
     MuiCssBaseline: {
-      '@global': {
+      styleOverrides: {
         '.MuiFormControl-root': {
           '& label': {
             '&.Mui-focused, &.MuiFormLabel-filled': {

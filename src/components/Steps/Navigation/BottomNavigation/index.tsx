@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from '@material-ui/icons'
 import { useCallback, useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import shallow from 'zustand/shallow'
-import useStepsStore from '../../../../stores/StepsStore'
+import useStepsStore from '../../../../stores/steps'
 
 const StepsBottomNavigation = () => {
   const [showNextButton, setShowNextButton] = useState(true)
@@ -12,6 +12,7 @@ const StepsBottomNavigation = () => {
     activeStep,
     totalSteps,
     completedSteps,
+    allTopicsCrossedOut,
     setActiveStep,
     getStepData,
     isStepCompleted,
@@ -21,6 +22,8 @@ const StepsBottomNavigation = () => {
       state.activeStep,
       state.totalSteps,
       state.completedSteps,
+      state.allTopicsCrossedOut,
+
       state.setActiveStep,
       state.getStepData,
       state.isStepCompleted,
@@ -42,9 +45,11 @@ const StepsBottomNavigation = () => {
           to={getStepData(activeStep + 1)?.route || ''}
           onClick={() => setActiveStep(activeStep + 1)}
           variant='contained'
-          color='primary'
           endIcon={<ChevronRight />}
-          disabled={!isStepCompleted(activeStep) && isStepRequired(activeStep)}
+          disabled={
+            (!isStepCompleted(activeStep) && isStepRequired(activeStep)) ||
+            (allTopicsCrossedOut && !isStepRequired(activeStep))
+          }
           disableRipple={true}>
           Next
         </Button>
@@ -55,14 +60,13 @@ const StepsBottomNavigation = () => {
   )
 
   return (
-    <Grid container justify={showPrevious ? 'space-between' : 'flex-end'}>
+    <Grid container justifyContent={showPrevious ? 'space-between' : 'flex-end'}>
       {showPrevious && (
         <Grid item>
           <Button
             component={RouterLink}
             to={getStepData(activeStep - 1)?.route || ''}
             onClick={() => setActiveStep(activeStep - 1)}
-            color='primary'
             startIcon={<ChevronLeft />}
             disableRipple={true}>
             Back

@@ -1,14 +1,26 @@
-import { IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@material-ui/core'
+import {
+  Collapse,
+  IconButton,
+  Input,
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText
+} from '@material-ui/core'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import AddIcon from '@material-ui/icons/Add'
+import { Theme } from '@material-ui/core/styles'
+import { Add } from '@material-ui/icons'
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded'
+import makeStyles from '@material-ui/styles/makeStyles'
 import { useCallback, useEffect, useState } from 'react'
+import { TransitionGroup } from 'react-transition-group'
 import shallow from 'zustand/shallow'
-import useStepsStore from '../../../stores/StepsStore'
-import { TopicStylesProps } from '../../../types/topic'
-import DeleteSecondaryAction from '../Lists/SecondaryActions/DeleteSecondaryAction'
-import useTopicStyles from '../Lists/styles/topic'
+import useStepsStore from '../../../stores/steps'
+import { TopicStylesProps } from '../../../types/topics'
+import ListItemGroupedIcon from '../Common/ListItemGroupedIcon'
+import useTopicStyles from '../styles/topics'
 
 const topicStylesOverrides: TopicStylesProps = {
   list: {
@@ -17,7 +29,7 @@ const topicStylesOverrides: TopicStylesProps = {
   }
 }
 
-const useStyles = makeStyles(({ spacing }: Theme) => ({
+const useStyles = makeStyles<Theme>(({ spacing }) => ({
   topicInputContainerAlone: {
     display: 'flex',
     flexGrow: 1,
@@ -44,13 +56,12 @@ const ListStep = () => {
     setInputValue('')
   }
 
-  // eslint-disable-next-line
-  useEffect(() => setStepState(!!topics.length), [topics])
+  useEffect(() => setStepState(!!topics.length), [topics, setStepState])
 
   return (
     <>
       <div className={hasTopics() ? classes.topicInputContainer : classes.topicInputContainerAlone}>
-        <FormControl fullWidth={true}>
+        <FormControl fullWidth={true} variant='standard'>
           <InputLabel htmlFor='topic-input'>Enter a topic...</InputLabel>
           <Input
             id='topic-input'
@@ -61,7 +72,7 @@ const ListStep = () => {
             endAdornment={
               <InputAdornment position='end'>
                 <IconButton aria-label='add' edge='end' color='secondary' onClick={handleOnAddTopicClick}>
-                  <AddIcon />
+                  <Add />
                 </IconButton>
               </InputAdornment>
             }
@@ -70,12 +81,23 @@ const ListStep = () => {
       </div>
       {hasTopics() ? (
         <List className={topicClasses.list}>
-          {topics.map(({ id, name }) => (
-            <ListItem key={id} className={topicClasses.listItem}>
-              <ListItemText primary={name} color='primary' />
-              <DeleteSecondaryAction deleteListItemHandler={() => deleteTopic(id)} />
-            </ListItem>
-          ))}
+          <TransitionGroup>
+            {topics.map(({ id, name, groupId }) => (
+              <Collapse key={id} in={true}>
+                <ListItem className={topicClasses.listItem}>
+                  <ListItemGroupedIcon groupId={groupId} />
+
+                  <ListItemText primary={name} color='primary' />
+
+                  <ListItemSecondaryAction>
+                    <IconButton onClick={() => deleteTopic(id)} edge='end' aria-label='delete'>
+                      <DeleteRoundedIcon color='primary' />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </Collapse>
+            ))}
+          </TransitionGroup>
         </List>
       ) : null}
     </>

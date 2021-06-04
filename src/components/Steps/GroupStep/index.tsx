@@ -3,20 +3,20 @@ import { CSSProperties, useEffect, useState } from 'react'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import shallow from 'zustand/shallow'
 import { ungroupedTopicsDroppableId } from '../../../constants/steps'
-import useStepsStore from '../../../stores/StepsStore'
-import { TopicGroup } from '../../../types/topic'
-import DndTopicList from '../Lists/DndTopicList'
-import useTopicStyles from '../Lists/styles/topic'
+import useStepsStore from '../../../stores/steps'
+import { TopicGroup } from '../../../types/topics'
+import useTopicStyles from '../styles/topics'
+import DndTopicList from './DndTopicList'
 import EditGroupNameDialog from './EditGroupNameDialog'
 import { default as TopicGroupComponent } from './TopicGroup'
 
-const getTopicStylesListOverrides = (hasTopics: boolean, padding?: number): CSSProperties => ({
-  padding: hasTopics ? 0 : `${padding}px 0 ${padding}px 0`
+const getTopicStylesListOverrides = (hasTopics: boolean, padding?: string): CSSProperties => ({
+  padding: hasTopics ? 0 : `${padding} 0 ${padding} 0`
 })
 
 const GroupStep = () => {
   const topicClasses = useTopicStyles()
-  const theme = useTheme()
+  const { spacing } = useTheme()
   const [topics, topicGroups, groupTopics, moveTopic, renameTopicGroup, setStepState] = useStepsStore(
     state => [
       state.ungroupedTopics,
@@ -71,7 +71,7 @@ const GroupStep = () => {
           topics={topics}
           droppableId={ungroupedTopicsDroppableId}
           isCombineEnabled={true}
-          listStyle={getTopicStylesListOverrides(!!topics.length, theme.spacing(2))}
+          listStyle={getTopicStylesListOverrides(!!topics.length, spacing(2))}
         />
       </DragDropContext>
       <EditGroupNameDialog

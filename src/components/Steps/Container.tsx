@@ -1,8 +1,8 @@
-import { Paper } from '@material-ui/core'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Paper, StyledEngineProvider, Theme } from '@material-ui/core'
+import makeStyles from '@material-ui/styles/makeStyles'
 import { FC, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import useStepsStore from '../../stores/StepsStore'
+import useStepsStore from '../../stores/steps'
 import LeftPanel from './LeftPanel'
 import StepsBottomNavigation from './Navigation/BottomNavigation'
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: '100vh',
-    padding: `0 ${spacing(3)}px`
+    padding: `0 ${spacing(3)}`
   },
   stepInnerContainer: {
     display: 'flex',
@@ -52,17 +52,19 @@ const Container: FC = ({ children }) => {
   useEffect(() => document.body.classList.add(classes.body), [classes.body])
 
   return (
-    <div className={classes.stepOuterContainer}>
-      <Paper elevation={4} className={classes.stepInnerContainer}>
-        <LeftPanel />
-        <div className={classes.stepOuterContentContainer}>
-          <div className={classes.stepInnerContentContainer}>
-            <div className={classes.stepContent}>{children}</div>
+    <StyledEngineProvider injectFirst={true}>
+      <div className={classes.stepOuterContainer}>
+        <Paper elevation={4} className={classes.stepInnerContainer}>
+          <LeftPanel />
+          <div className={classes.stepOuterContentContainer}>
+            <div className={classes.stepInnerContentContainer}>
+              <div className={classes.stepContent}>{children}</div>
+            </div>
+            <StepsBottomNavigation />
           </div>
-          <StepsBottomNavigation />
-        </div>
-      </Paper>
-    </div>
+        </Paper>
+      </div>
+    </StyledEngineProvider>
   )
 }
 

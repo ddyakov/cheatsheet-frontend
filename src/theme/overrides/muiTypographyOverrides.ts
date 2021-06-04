@@ -1,9 +1,8 @@
-import { StyleRules } from '@material-ui/core/styles/withStyles'
-import { TypographyClassKey } from '@material-ui/core/Typography'
+import { ComponentsOverrides } from '@material-ui/core/styles'
 
 const upperCaseStyle = 'uppercase'
 
-const muiTypographyOverrides: Partial<StyleRules<TypographyClassKey, {}>> = {
+const muiTypographyOverrides: ComponentsOverrides['MuiTypography'] = {
   h1: {
     textTransform: upperCaseStyle
   },

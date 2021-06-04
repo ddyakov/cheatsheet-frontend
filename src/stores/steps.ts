@@ -6,8 +6,8 @@ import { v4 as uuidv4 } from 'uuid'
 import create, { State, StateCreator } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { ungroupedTopicsDroppableId } from '../constants/steps'
-import { StepData, StepsStore } from '../types/store'
-import { Topic, TopicGroup } from '../types/topic'
+import { StepData, StepsStore } from '../types/stores'
+import { Topic, TopicGroup } from '../types/topics'
 
 enableES5()
 setUseProxies(false)
@@ -81,12 +81,27 @@ const getTopicById = (topics: Topic[], id: string): Topic => getById<Topic>(topi
 
 const getTopicGroupById = (groups: TopicGroup[], id: string): TopicGroup => getById<TopicGroup>([...groups], id)
 
-const addTopic = (topics: Topic[], topic: Topic): Topic[] => [...topics, topic]
+const addTopic = (topics: Topic[], topicToAdd: Topic): Topic[] =>
+  topics.some(topic => topic.id === topicToAdd.id) ? [...topics] : [...topics, topicToAdd]
 
 const deleteTopic = (topics: Topic[], id: string): Topic[] => _.filter(topics, (topic: Topic) => topic.id !== id)
 
 const deleteTopics = (topics: Topic[], ...toRemoveIds: string[]): Topic[] =>
   _.filter(topics, topic => !toRemoveIds.some(id => id === topic.id))
+
+const deleteTopicFromGroupIfPossible = (topics: Topic[], groups: TopicGroup[], id: string): TopicGroup[] => {
+  const topicsClone = [...topics]
+  const groupsClone = [...groups]
+
+  const { groupId } = getTopicById(topicsClone, id)
+
+  if (!groupId) return groupsClone
+
+  const topicGroup = getTopicGroupById(groupsClone, groupId)
+  topicGroup.topics = deleteTopic(topicGroup.topics, id)
+
+  return filterEmptyTopicGroups(groupsClone)
+}
 
 const filterEmptyTopicGroups = (groups: TopicGroup[]) => groups.filter(({ topics }) => topics.length)
 
@@ -108,6 +123,7 @@ const useStepsStore = createStore<StepsStore>((set, get) => ({
   topics: [],
   ungroupedTopics: [],
   topicGroups: [],
+  allTopicsCrossedOut: false,
   setSubject: subject => {
     get().setStepState(!!subject)
     set(state => void (state.subject = subject))
@@ -116,9 +132,8 @@ const useStepsStore = createStore<StepsStore>((set, get) => ({
   getActiveStepData: () => stepsData[get().activeStep],
   getStepData: step => stepsData[step],
   setActiveStep: step => set(state => void (state.activeStep = step)),
-  setStepState: (complete, step) => {
-    set(state => void (state.completedSteps[step || state.activeStep] = complete))
-  },
+  setStepState: (complete, step) => set(state => void (state.completedSteps[step || state.activeStep] = complete)),
+  setAllTopicsCrossedOut: allCrossedOut => set(state => void (state.allTopicsCrossedOut = allCrossedOut)),
   isStepCompleted: step => get().completedSteps[step],
   isStepRequired: step => requiredSteps.includes(step),
   allRequiredStepsCompleted: () => requiredSteps.every(step => get().completedSteps[step]),
@@ -137,18 +152,22 @@ const useStepsStore = createStore<StepsStore>((set, get) => ({
     })
   },
   deleteTopic: id =>
-    // TODO: remove topic from group if it is in one
     set(state => {
+      state.topicGroups = deleteTopicFromGroupIfPossible(state.topics, state.topicGroups, id)
+
       state.topics = deleteTopic(state.topics, id)
       state.ungroupedTopics = deleteTopic(state.ungroupedTopics, id)
     }),
   toggleCrossOutTopic: id =>
-    // TODO: remove topic from group if it is in one
     set(state => {
       const topic: Topic = getTopicById(state.topics, id)
       topic.crossedOut = !topic.crossedOut
 
-      // TODO: this creates issues, should be fixed
+      if (topic.crossedOut) {
+        state.topicGroups = deleteTopicFromGroupIfPossible(state.topics, state.topicGroups, id)
+        topic.groupId = null
+      }
+
       state.ungroupedTopics = topic.crossedOut
         ? deleteTopic(state.ungroupedTopics, id)
         : addTopic(state.ungroupedTopics, topic)

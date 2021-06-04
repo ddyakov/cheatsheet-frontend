@@ -1,6 +1,6 @@
 import { DraggableLocation } from 'react-beautiful-dnd'
 import { State } from 'zustand'
-import { Topic, TopicGroup } from './topic'
+import { Topic, TopicGroup } from './topics'
 
 export interface StepData {
   title: string
@@ -16,12 +16,14 @@ export interface StepsStore extends State {
   topics: Topic[]
   ungroupedTopics: Topic[]
   topicGroups: TopicGroup[]
+  allTopicsCrossedOut: boolean
   setSubject: (subject: string) => void
   // Steps
   getActiveStepData: () => StepData
   getStepData: (step: number) => StepData
   setActiveStep: (step: number) => void
   setStepState: (complete: boolean, step?: number) => void
+  setAllTopicsCrossedOut: (allCrossedOut: boolean) => void
   isStepCompleted: (step: number) => boolean
   isStepRequired: (step: number) => boolean
   allRequiredStepsCompleted: () => boolean

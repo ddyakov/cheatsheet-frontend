@@ -1,7 +1,8 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core'
-import { TopicStylesProps } from '../../../../types/topic'
+import { Theme } from '@material-ui/core'
+import { createStyles, makeStyles } from '@material-ui/styles'
+import { TopicStylesProps } from '../../../types/topics'
 
-const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
+const useTopicStyles = makeStyles<Theme>(({ palette, shape, shadows, spacing }) =>
   createStyles({
     container: ({ container }: TopicStylesProps = {}) => ({
       maxHeight: 620,
@@ -9,8 +10,8 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
     }),
     list: ({ list }: TopicStylesProps = {}) => ({
       backgroundColor: palette.grey[100],
-      borderRadius: shape.borderRadius / 2,
-      padding: `${spacing(2)}px ${spacing(2)}px 0 ${spacing(2)}px`,
+      borderRadius: +shape.borderRadius / 2,
+      padding: `${spacing(2)} ${spacing(2)} 0 ${spacing(2)}`,
       overflowY: 'auto',
       maxHeight: 590,
       ...list
@@ -24,11 +25,25 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
     }),
     listItem: ({ listItem }: TopicStylesProps = {}) => ({
       backgroundColor: palette.common.white,
-      borderRadius: shape.borderRadius / 2,
+      borderRadius: +shape.borderRadius / 2,
       wordBreak: 'break-all',
       marginBottom: spacing(2),
       ...listItem
     }),
+    listItemTextFlexNone: {
+      '&.MuiListItemText-root': {
+        // flex: 'none'
+      }
+    },
+    listItemTextGroupIcon: {
+      '&.MuiSvgIcon-root': {
+        marginLeft: spacing(2),
+
+        '&:hover': {
+          cursor: 'default'
+        }
+      }
+    },
     listItemCrossedOut: ({ listItemCrossedOut }: TopicStylesProps = {}) => ({
       textDecoration: 'line-through',
       ...listItemCrossedOut
@@ -49,6 +64,7 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
       '&.MuiAccordion-root': {
         backgroundColor: 'inherit',
         marginBottom: spacing(2),
+
         '&.Mui-expanded': {
           margin: 0
         },
@@ -59,21 +75,21 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
     },
     groupListContainer: {
       '&.MuiAccordionDetails-root': {
-        padding: `${spacing(2)}px ${spacing(3)}px 0 ${spacing(3)}px`
+        padding: `${spacing(2)} ${spacing(3)} 0 ${spacing(3)}`
       }
     },
     groupHeader: {
       '&.MuiAccordionSummary-root': {
         backgroundColor: palette.common.white,
-        borderRadius: shape.borderRadius / 2,
-        padding: `${spacing()}px ${spacing(2)}px`,
+        borderRadius: +shape.borderRadius / 2,
+        padding: `${spacing()} ${spacing(2)}`,
         wordBreak: 'break-all',
 
         '&.Mui-expanded': {
           minHeight: 'auto'
         },
         '& .MuiAccordionSummary-content': {
-          margin: `${spacing() / 2}px 0`
+          margin: '4px 0'
         },
         '& .MuiAccordionSummary-expandIcon': {
           padding: 0,
@@ -90,7 +106,6 @@ const topicStyles = ({ palette, shape, shadows, spacing }: Theme) =>
       }
     }
   })
-
-const useTopicStyles = makeStyles((theme: Theme) => topicStyles(theme))
+)
 
 export default useTopicStyles

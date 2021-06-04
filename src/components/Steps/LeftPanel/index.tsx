@@ -1,8 +1,9 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Stepper } from '../Navigation'
+import { Theme } from '@material-ui/core/styles'
+import makeStyles from '@material-ui/styles/makeStyles'
+import Stepper from '../Navigation/Stepper'
 import Header from './Header'
 
-const useStyles = makeStyles(({ palette, shape, spacing }: Theme) => ({
+const useStyles = makeStyles<Theme>(({ palette, shape, spacing }) => ({
   leftPanelContainer: {
     display: 'flex',
     flexDirection: 'column',

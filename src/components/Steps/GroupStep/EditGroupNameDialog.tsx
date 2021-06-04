@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, TextField, useMediaQuery } from '@material-ui/core'
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
+import { Theme, useTheme } from '@material-ui/core/styles'
 import SaveIcon from '@material-ui/icons/Save'
+import makeStyles from '@material-ui/styles/makeStyles'
 
 interface EditGroupNameDialogProps {
   open: boolean
@@ -10,10 +11,10 @@ interface EditGroupNameDialogProps {
   setName: (name: string) => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles<Theme>(({ shape, breakpoints }) => ({
   dialogPaper: {
-    borderRadius: theme.shape.borderRadius / 2,
-    [theme.breakpoints.only('xs')]: {
+    borderRadius: +shape.borderRadius / 2,
+    [breakpoints.down('sm')]: {
       borderRadius: 0
     }
   }
@@ -21,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const EditGroupNameDialog = ({ open, onSaveHandler, onCloseHandler, name, setName }: EditGroupNameDialogProps) => {
   const classes = useStyles()
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
+  const { breakpoints } = useTheme()
+  const fullScreen = useMediaQuery(breakpoints.down('sm'))
 
   return (
     <Dialog
@@ -46,10 +47,8 @@ const EditGroupNameDialog = ({ open, onSaveHandler, onCloseHandler, name, setNam
         />
       </DialogContent>
       <DialogActions>
-        <Button color='primary' onClick={onCloseHandler}>
-          Cancel
-        </Button>
-        <Button variant='contained' color='primary' startIcon={<SaveIcon />} onClick={onSaveHandler}>
+        <Button onClick={onCloseHandler}>Cancel</Button>
+        <Button variant='contained' startIcon={<SaveIcon />} onClick={onSaveHandler}>
           Save
         </Button>
       </DialogActions>

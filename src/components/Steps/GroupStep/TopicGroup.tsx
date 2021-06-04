@@ -2,9 +2,9 @@ import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography }
 import EditIcon from '@material-ui/icons/Edit'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { CSSProperties, MouseEventHandler } from 'react'
-import { Topic } from '../../../types/topic'
-import DndTopicList from '../Lists/DndTopicList'
-import useTopicStyles from '../Lists/styles/topic'
+import { Topic } from '../../../types/topics'
+import useTopicStyles from '../styles/topics'
+import DndTopicList from './DndTopicList'
 
 interface TopicGroupProps {
   id: string

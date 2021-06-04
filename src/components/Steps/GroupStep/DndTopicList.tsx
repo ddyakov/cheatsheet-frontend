@@ -9,8 +9,8 @@ import {
   DroppableProvided,
   NotDraggingStyle
 } from 'react-beautiful-dnd'
-import { Topic } from '../../../types/topic'
-import useTopicStyles from './styles/topic'
+import { Topic } from '../../../types/topics'
+import useTopicStyles from '../styles/topics'
 
 interface DndTopicListProps {
   topics: Topic[]
@@ -21,11 +21,11 @@ interface DndTopicListProps {
 
 const DndTopicList = ({ topics, listStyle, droppableId, isCombineEnabled = false }: DndTopicListProps) => {
   const topicClasses = useTopicStyles()
-  const theme = useTheme()
+  const { spacing } = useTheme()
 
   const getListItemStyles = (draggableStyle: DraggingStyle | NotDraggingStyle | undefined): CSSProperties => ({
     userSelect: 'none',
-    marginBottom: theme.spacing(2),
+    marginBottom: spacing(2),
     ...draggableStyle
   })
 
@@ -35,7 +35,7 @@ const DndTopicList = ({ topics, listStyle, droppableId, isCombineEnabled = false
         <List ref={provided.innerRef} aria-label='List' style={listStyle}>
           {topics.map(({ id, name }, index) => (
             <Draggable key={id} draggableId={id} index={index}>
-              {(provided: DraggableProvided, snapshot) => (
+              {(provided: DraggableProvided) => (
                 <ListItem
                   key={id}
                   className={clsx(topicClasses.listItem, topicClasses.listItemHoverShadow)}

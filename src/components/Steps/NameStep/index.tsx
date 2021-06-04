@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
+import makeStyles from '@material-ui/styles/makeStyles'
 import shallow from 'zustand/shallow'
-import useStepsStore from '../../../stores/StepsStore'
+import useStepsStore from '../../../stores/steps'
 
 const useStyles = makeStyles(() => ({
   subjectTextFieldContainer: {
@@ -20,6 +20,7 @@ const NameStep = () => {
       <TextField
         id='subject'
         label='What are you studying for?'
+        variant='standard'
         fullWidth={true}
         value={subject}
         onChange={e => setSubject(e.target.value)}

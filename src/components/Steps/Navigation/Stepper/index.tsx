@@ -1,17 +1,37 @@
-import { Step, StepButton, Stepper as MuiStepper } from '@material-ui/core'
-import { StylesProvider } from '@material-ui/core/styles'
+import { Step, StepButton, StepLabel, Stepper as MuiStepper, Theme } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
 import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import shallow from 'zustand/shallow'
-import useStepsStore from '../../../../stores/StepsStore'
-import CheatSheetStepConnector from './CheatSheetStepConnector'
-import CheatSheetStepIcon from './CheatSheetStepIcon'
-import CheatSheetStepLabel from './CheatSheetStepLabel'
-import './Stepper.scss'
+import useStepsStore from '../../../../stores/steps'
+import CustomStepConnector from './CustomStepConnector'
+import CustomStepIcon from './CustomStepIcon'
 
 const stepsNames: string[] = ['Name', 'List', 'Cross-out', 'Group', 'Editor']
 
+const useStyles = makeStyles<Theme>(({ palette, spacing }) => ({
+  stepperRoot: {
+    padding: spacing(3)
+  },
+  stepLabelRoot: {
+    padding: 0,
+
+    '& .MuiStepLabel-labelContainer': {
+      color: palette.secondary.dark,
+
+      '& .MuiTypography-root.MuiStepLabel-label': {
+        fontWeight: 400,
+
+        '&.MuiStepLabel-completed, &.Mui-active': {
+          color: palette.common.white
+        }
+      }
+    }
+  }
+}))
+
 const Stepper = () => {
+  const classes = useStyles()
   const [
     activeStep,
     completedSteps,
@@ -37,6 +57,7 @@ const Stepper = () => {
         <Step
           active={activeStep === index}
           key={index}
+          index={index}
           disabled={!isStepCompleted(index) || !allRequiredStepsCompleted()}
           completed={isStepCompleted(index)}>
           <StepButton
@@ -44,7 +65,9 @@ const Stepper = () => {
             onClick={() => setActiveStep(index)}
             component={Link}
             to={getStepData(index).route}>
-            <CheatSheetStepLabel StepIconComponent={CheatSheetStepIcon}>{label}</CheatSheetStepLabel>
+            <StepLabel StepIconComponent={CustomStepIcon} className={classes.stepLabelRoot}>
+              {label}
+            </StepLabel>
           </StepButton>
         </Step>
       )),
@@ -53,11 +76,13 @@ const Stepper = () => {
   )
 
   return (
-    <StylesProvider injectFirst={true}>
-      <MuiStepper connector={<CheatSheetStepConnector />} activeStep={activeStep} orientation='vertical'>
-        {renderStepsCallback()}
-      </MuiStepper>
-    </StylesProvider>
+    <MuiStepper
+      connector={<CustomStepConnector />}
+      activeStep={activeStep}
+      className={classes.stepperRoot}
+      orientation='vertical'>
+      {renderStepsCallback()}
+    </MuiStepper>
   )
 }
 

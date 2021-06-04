@@ -1,8 +1,9 @@
 import { Grid, Typography } from '@material-ui/core'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import useStepsStore from '../../../../stores/StepsStore'
+import { Theme } from '@material-ui/core/styles'
+import makeStyles from '@material-ui/styles/makeStyles'
+import useStepsStore from '../../../../stores/steps'
 
-const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
+const useStyles = makeStyles<Theme>(({ palette, spacing }) => ({
   headerContainer: {
     marginBottom: spacing(4)
   },
